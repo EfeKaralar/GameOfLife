@@ -66,13 +66,6 @@ count_neighbors() {
   done
 }
 
-# Place glider centered around row 5, col 10
-set_cell 5 11
-set_cell 6 12
-set_cell 7 10
-set_cell 7 11
-set_cell 7 12
-
 main() {
   while true; do
     display
@@ -95,4 +88,66 @@ main() {
   done
 }
 
+############# SHAPES ##############
+######## STATIC SHAPES ############
+# Block
+block() {
+  local -n grid=$1
+  local r=$2 c=$3
+  index idx $r $c
+  grid[$idx]=1
+  ((c + 1 < cols)) && grid[$((idx + 1))]=1
+  ((r + 1 < rows)) && grid[$((idx + cols))]=1
+  ((c + 1 < cols && r + 1 < rows)) && grid[$((idx + cols + 1))]=1
+}
+
+############# SHAPES ##############
+######## STATIC SHAPES ############
+block() {
+  local -n g=$1
+  local r=$2 c=$3
+  index idx $r $c
+  g[$idx]=1
+  ((c + 1 < cols)) && g[$((idx + 1))]=1
+  ((r + 1 < rows)) && g[$((idx + cols))]=1
+  ((c + 1 < cols && r + 1 < rows)) && g[$((idx + cols + 1))]=1
+}
+
+######## OSCILATORS ###############
+blinker() {
+  local -n g=$1
+  local r=$2 c=$3
+  index idx $r $c
+  g[$idx]=1
+  ((r + 1 < rows)) && g[$((idx + cols))]=1
+  ((r + 2 < rows)) && g[$((idx + cols + cols))]=1
+}
+######## SPACESHIPS ###############
+glider() {
+  local -n g=$1
+  local r=$2 c=$3
+  index idx $r $c
+  g[$idx + 1]=1
+  ((r + 1 < rows && c + 2 < cols)) && g[$idx + cols + 2]=1
+  ((r + 2 < rows)) && g[$idx + cols + cols]=1
+  ((r + 2 < rows && c + 1 < cols)) && g[$idx + cols + cols + 1]=1
+  ((r + 2 < rows && c + 2 < cols)) && g[$idx + cols + cols + 2]=1
+
+}
+
+# Place a box
+block grid 10 32
+
+# Place a blinker
+blinker grid 8 2
+
+# Place glider centered around row 5, col 10
+glider grid 5 10
+
+main
+
+# Place a box
+block grid 10 32
+
+############# MAIN FUNCTION ###########
 main
