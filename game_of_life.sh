@@ -4,13 +4,13 @@
 # Right now, setting the terminal dimensions manually will be easier for us
 rows=24
 cols=96
-echo "Pause to insert shapes   p: pause/unpause | hjkl: move cursor"
 
-# initialize grid to all zeros
 paused=1 # 0: false - 1: true
 grid=($(printf '0%.0s ' $(seq 1 $((rows * cols)))))
 mode="empty"
 preset_num=1
+cursor_c=0
+cursor_r=0
 
 ############ HELPER FUNCTIONS #############
 parse_flags() {
@@ -144,9 +144,18 @@ display() {
     for ((c = 0; c < $cols; c++)); do
       index idx $r $c
       cell=${grid[$idx]}
-      [[ $cell -eq 1 ]] && printf '#' || printf ' '
+      if ((cursor_r == r && cursor_c == c)); then
+        printf '@'
+      else
+        [[ $cell -eq 1 ]] && printf '#' || printf ' '
+      fi
     done
   done
+  display_footer
+}
+
+display_footer() {
+  printf "Pause to insert shapes\np: pause/unpause | hjkl: move cursor\n Cursor location:'%d' '%d' " $cursor_c $cursor_r
 }
 
 count_neighbors() {
@@ -192,7 +201,15 @@ main() {
     display
     read -r -t 0.2 -n 1 key
     # printf "KEY: '%s' PAUSED: %d\n" "$key" "$paused" # temporary debug line
-    [[ "$key" == "p" ]] && paused=$((!paused))
+    case $key in
+    p)
+      paused=$((!paused))
+      ;;
+    h) ((cursor_c > 0)) && ((cursor_c--)) ;;
+    l) ((cursor_c < cols - 1)) && ((cursor_c++)) ;;
+    k) ((cursor_r > 0)) && ((cursor_r--)) ;;
+    j) ((cursor_r < rows - 1)) && ((cursor_r++)) ;;
+    esac
     ((!paused)) && loop
   done
 }
