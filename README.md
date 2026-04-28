@@ -4,6 +4,8 @@ This is an implementation of "Conway's Game of Life" in Bash scripting language 
 
 Author: Alp Efe Karalar
 
+** Warning: ** Currently only works with a 24 x 96 terminal resolution. Please resize your terminal to fit it.
+
 ## Features
 - [x] Display static grid on terminal (24 x 96)
 - [x] Start Game of Life with predetermined shape (Slider)
@@ -12,7 +14,7 @@ Author: Alp Efe Karalar
   - [x] Random grid 
   - [x] Set grids (#TODO: Add more)
 - [ ] Ability to add new shapes to the grid 
-  - [ ] Add pausing capability to add new shapes 
+  - [x] Add pausing capability to add new shapes 
   - [ ] Add a cursor that can be moved with VIM keys (`hjkl`) when paused
   - [ ] Add ability to choose shape to insert while paused 
     - 'b' for basic static shapes 

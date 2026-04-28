@@ -4,9 +4,12 @@
 # Right now, setting the terminal dimensions manually will be easier for us
 rows=24
 cols=96
-echo "Set dimensions to $rows X $cols"
+echo "Pause to insert shapes   p: pause/unpause | hjkl: move cursor"
 
-mode=""
+# initialize grid to all zeros
+paused=1 # 0: false - 1: true
+grid=($(printf '0%.0s ' $(seq 1 $((rows * cols)))))
+mode="empty"
 preset_num=1
 
 ############ HELPER FUNCTIONS #############
@@ -89,8 +92,6 @@ setup_grid() {
     ;;
 
   random)
-    echo "Randomly initializing grid"
-    # TODO: Implement
     local size=$((rows * cols))
     local shape r c
     # Put a random shape every 5-15 pixels
@@ -166,26 +167,33 @@ count_neighbors() {
   done
 }
 
+loop() {
+  declare -a next=("${grid[@]}")
+  for ((r = 0; r < rows; r++)); do
+    for ((c = 0; c < cols; c++)); do
+      neighbors=0
+      count_neighbors neighbors $r $c
+      index idx $r $c
+      # if neighbors < 2 OR > 3; die
+      # if neighbors == 2; continue life
+      # if neighbors == 3; be born
+      [[ $neighbors -lt 2 || $neighbors -gt 3 ]] && next[$idx]=0
+      [[ $neighbors -eq 2 ]] && next[$idx]=${grid[$idx]}
+      [[ $neighbors -eq 3 ]] && next[$idx]=1
+    done
+  done
+  grid=("${next[@]}")
+  # sleep 0.2
+}
+
 main() {
   parse_flags "$@"
   while true; do
     display
-    declare -a next=("${grid[@]}")
-    for ((r = 0; r < rows; r++)); do
-      for ((c = 0; c < cols; c++)); do
-        neighbors=0
-        count_neighbors neighbors $r $c
-        index idx $r $c
-        # if neighbors < 2 OR > 3; die
-        # if neighbors == 2; continue life
-        # if neighbors == 3; be born
-        [[ $neighbors -lt 2 || $neighbors -gt 3 ]] && next[$idx]=0
-        [[ $neighbors -eq 2 ]] && next[$idx]=${grid[$idx]}
-        [[ $neighbors -eq 3 ]] && next[$idx]=1
-      done
-    done
-    grid=("${next[@]}")
-    sleep 0.2
+    read -r -t 0.2 -n 1 key
+    # printf "KEY: '%s' PAUSED: %d\n" "$key" "$paused" # temporary debug line
+    [[ "$key" == "p" ]] && paused=$((!paused))
+    ((!paused)) && loop
   done
 }
 
