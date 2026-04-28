@@ -50,6 +50,24 @@ display() {
   done
 }
 
+count_neighbors() {
+  local -n result=$1 # nameref
+  local r=$2 c=$3
+  for ((i = -1; i < 2; i++)); do
+    for ((j = -1; j < 2; j++)); do
+      # Skip the main cell
+      ((r == 0 && j == 0)) && continue
+      local nr=$((r + i))
+      local nc=$((c + j))
+      # Out of bond check
+      ((nr < 0 || nr >= rows || nc < 0 || nc >= cols)) && continue
+      index idx $nr $nc
+      cell=${grid[$idx]}
+      [[ $cell -eq 1 ]] && ((result++))
+    done
+  done
+}
+
 # Place glider centered around row 5, col 10
 set_cell 5 11
 set_cell 6 12
@@ -59,6 +77,15 @@ set_cell 7 12
 
 while true; do
   display
+  for ((r = 0; r < rows; r++)); do
+    for ((c = 0; c < cols; c++)); do
+      count_neighbors neighbors $r $c
+      index idx $r $c
+      # if neighbors < 2 OR > 3; die
+      # if neighbors == 2; continue life
+      # if neighbors == 3; be born
+    done
+  done
 done
 # index idx 2 3
 # echo $idx
