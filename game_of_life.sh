@@ -1,7 +1,5 @@
-#!/opt/homebrew/bin/bash
-# For MacOS ^^
-#!/bin/bash
-# For Linux ^^
+#!/usr/bin/env bash
+
 # Set total row & col count to the dimensions of the terminal
 # Have 2 cols empty to display status etc.
 # cols=$(tput cols)
@@ -75,22 +73,26 @@ set_cell 7 10
 set_cell 7 11
 set_cell 7 12
 
-while true; do
-  display
-  declare -a next=("${grid[@]}")
-  for ((r = 0; r < rows; r++)); do
-    for ((c = 0; c < cols; c++)); do
-      neighbors=0
-      count_neighbors neighbors $r $c
-      index idx $r $c
-      # if neighbors < 2 OR > 3; die
-      # if neighbors == 2; continue life
-      # if neighbors == 3; be born
-      [[ $neighbors -lt 2 || $neighbors -gt 3 ]] && next[$idx]=0
-      [[ $neighbors -eq 2 ]] && next[$idx]=${grid[$idx]}
-      [[ $neighbors -eq 3 ]] && next[$idx]=1
+main() {
+  while true; do
+    display
+    declare -a next=("${grid[@]}")
+    for ((r = 0; r < rows; r++)); do
+      for ((c = 0; c < cols; c++)); do
+        neighbors=0
+        count_neighbors neighbors $r $c
+        index idx $r $c
+        # if neighbors < 2 OR > 3; die
+        # if neighbors == 2; continue life
+        # if neighbors == 3; be born
+        [[ $neighbors -lt 2 || $neighbors -gt 3 ]] && next[$idx]=0
+        [[ $neighbors -eq 2 ]] && next[$idx]=${grid[$idx]}
+        [[ $neighbors -eq 3 ]] && next[$idx]=1
+      done
     done
+    grid=("${next[@]}")
+    sleep 0.2
   done
-  grid=("${next[@]}")
-  sleep 0.2
-done
+}
+
+main
