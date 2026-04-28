@@ -84,17 +84,38 @@ setup_grid() {
   case $m in
 
   empty)
+    # do nothing
     :
     ;;
 
   random)
     echo "Randomly initializing grid"
     # TODO: Implement
+    local size=$((rows * cols))
+    local shape r c
+    # Put a random shape every 5-15 pixels
+    for ((idx = 0; idx < size; idx += RANDOM % 10 + 5)); do
+      shape=$((RANDOM % 3))
+      r=$((idx / cols))
+      c=$((idx % cols))
+      case $shape in
+      0)
+        block grid $r $c
+        ;;
+      1)
+        blinker grid $r $c
+        ;;
+      2)
+        glider grid $r $c
+        ;;
+      esac
+    done
     ;;
 
   preset)
     case $p in
     1)
+      # A random shape I drew that uses all the objects so far
       # Place a box
       block grid 10 32
       # Place a blinker

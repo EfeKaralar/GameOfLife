@@ -7,7 +7,10 @@ Author: Alp Efe Karalar
 ## Features
 - [x] Display static grid on terminal (24 x 96)
 - [x] Start Game of Life with predetermined shape (Slider)
-- [ ] Ability to start the game of life with predetermined patterns
+- [x] Ability to start the game of life with predetermined patterns
+  - [x] Empty grid 
+  - [x] Random grid 
+  - [x] Set grids (#TODO: Add more)
 - [ ] Ability to add new shapes to the grid 
 - [ ] Adjust display dimensions size dynamically to the terminal size (REACH)
 - [ ] Fix flickering (REACH)
