@@ -1,16 +1,49 @@
 #!/usr/bin/env bash
 
-# Set total row & col count to the dimensions of the terminal
-# Have 2 cols empty to display status etc.
-# cols=$(tput cols)
-# rows=$(($(tput lines) - 2))
-#
-# Right now, setting it manually will work and be easier for us
+############ SET UP ######################
+# Right now, setting the terminal dimensions manually will be easier for us
 rows=24
 cols=96
 echo "Set dimensions to $rows X $cols"
 # initialize grid to all zeros
 grid=($(printf '0%.0s ' $(seq 1 $((rows * cols)))))
+
+############ HELPER FUNCTIONS #############
+parse_flags() {
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+    -h)
+      show_help
+      exit 0
+      ;;
+    -e) mode="empty" ;;
+    -r) mode="random" ;;
+    -l)
+      mode="preset"
+      preset_num=$2
+      shift
+      ;;
+    *)
+      show_help
+      exit 1
+      ;; # unknown flag
+    esac
+    shift # move to next argument
+  done
+}
+
+show_help() {
+  cat <<EOF
+Usage: ./game_of_life [flag]
+  -h        Show this help menu
+  -e        Start with empty grid
+  -r        Start with random pattern
+  -l [n]    Load preset number n
+              1: Block
+              2: Blinker
+              3: Glider
+EOF
+}
 
 # Functıon to the index of an item at a row and column
 # Need to pass the row index, col index
@@ -67,6 +100,7 @@ count_neighbors() {
 }
 
 main() {
+  parse_flags "$@"
   while true; do
     display
     declare -a next=("${grid[@]}")
@@ -144,10 +178,5 @@ blinker grid 8 2
 # Place glider centered around row 5, col 10
 glider grid 5 10
 
-main
-
-# Place a box
-block grid 10 32
-
 ############# MAIN FUNCTION ###########
-main
+main "$@"
