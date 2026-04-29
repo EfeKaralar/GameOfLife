@@ -136,21 +136,24 @@ setup_grid() {
 
 # display grid function
 # TODO:
-# 1. Fix Flicker
-# 2. Add dynamic scaling (reach goal)
+# [x] Fix Flicker
+# [ ] Add dynamic scaling (reach goal)
 display() {
-  printf '\e[H'
+  local frame=''
+  frame+='\e[H' # cursor to home
   for ((r = 0; r < $rows; r++)); do
     for ((c = 0; c < $cols; c++)); do
       index idx $r $c
       cell=${grid[$idx]}
       if ((cursor_r == r && cursor_c == c)); then
-        printf '@'
+        frame+='@'
       else
-        [[ $cell -eq 1 ]] && printf '#' || printf ' '
+        [[ $cell -eq 1 ]] && frame+='#' || frame+=' '
       fi
     done
+    frame+='\n'
   done
+  printf "$frame"
   display_footer
 }
 

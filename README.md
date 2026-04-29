@@ -22,4 +22,4 @@ Author: Alp Efe Karalar
     - 's' for spaceships 
   - [ ] Extend shapes and add "number followed by shape insertion" logic 
 - [ ] Adjust display dimensions size dynamically to the terminal size (REACH)
-- [ ] Fix flickering (REACH)
+- [x] Fix flickering 
