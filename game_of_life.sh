@@ -145,7 +145,7 @@ display() {
     for ((c = 0; c < $cols; c++)); do
       index idx $r $c
       cell=${grid[$idx]}
-      if ((cursor_r == r && cursor_c == c)); then
+      if ((paused && cursor_r == r && cursor_c == c)); then
         frame+='@'
       else
         [[ $cell -eq 1 ]] && frame+='#' || frame+=' '
@@ -154,11 +154,14 @@ display() {
     frame+='\n'
   done
   printf "$frame"
+  printf '\e[%d;0H' $((rows)) # move cursor to the footer row
   display_footer
 }
 
 display_footer() {
-  printf "Pause to insert shapes\np: pause/unpause | hjkl: move cursor\n Cursor location:'%d' '%d' " $cursor_c $cursor_r
+  printf "Pause to insert shapes\n"
+  printf "p: pause/unpause | hjkl: move cursor | i: pixel | b: basic | o: oscilator | s: spaceship\n"
+  printf "Cursor location:'%d' '%d' " $cursor_c $cursor_r
 }
 
 count_neighbors() {
@@ -166,7 +169,7 @@ count_neighbors() {
   local r=$2 c=$3
   for ((i = -1; i < 2; i++)); do
     for ((j = -1; j < 2; j++)); do
-      # Skip the main cell
+      # Skip the selected cell
       ((i == 0 && j == 0)) && continue
       local nr=$((r + i))
       local nc=$((c + j))
@@ -213,23 +216,36 @@ main() {
     k) ((cursor_r > 0)) && ((cursor_r--)) ;;
     j) ((cursor_r < rows - 1)) && ((cursor_r++)) ;;
     # Insert shapes when paused
+    i)
+      ((paused)) && set_cell cursor_r cursor_c
+      ;;
     b)
-      ((paused)) && block grid $cursor_r $cursor_c
+      ((paused)) && select_basic_shape
       ;;
     o)
-      ((paused)) && blinker grid $cursor_r $cursor_c
+      ((paused)) && select_oscilator
       ;;
     s)
-      ((paused)) && glider grid $cursor_r $cursor_c
+      ((paused)) && select_spaceship
       ;;
     esac
     ((!paused)) && loop
-    # Insert shapes when paused
   done
 }
 
 ############# SHAPES ##############
 ######## STATIC SHAPES ############
+select_basic_shape() {
+  # step 1: show options
+  # step 2: read 1 keypress
+  read -r -n 1 shape_key
+  # step 3: case on shape_key
+  case $shape_key in
+  1) block grid $cursor_r $cursor_c ;;
+  2) beehive grid $cursor_r $cursor_c ;;
+  *) quit_selection ;; # TODO: Implement
+  esac
+}
 # Block
 block() {
   local -n grid=$1
@@ -241,19 +257,31 @@ block() {
   ((c + 1 < cols && r + 1 < rows)) && grid[$((idx + cols + 1))]=1
 }
 
-############# SHAPES ##############
-######## STATIC SHAPES ############
-block() {
-  local -n g=$1
+# Beehive
+beehive() {
+  local -n grid=$1
   local r=$2 c=$3
   index idx $r $c
-  g[$idx]=1
-  ((c + 1 < cols)) && g[$((idx + 1))]=1
-  ((r + 1 < rows)) && g[$((idx + cols))]=1
-  ((c + 1 < cols && r + 1 < rows)) && g[$((idx + cols + 1))]=1
+  ((c + 1 < cols)) && grid[$((idx + 1))]=1                               # 0, 1
+  ((c + 2 < cols)) && grid[$((idx + 2))]=1                               # 0, 2
+  ((r + 1 < rows)) && grid[$((idx + cols))]=1                            # 1, 0
+  ((c + 1 < cols && r + 2 < rows)) && grid[$((idx + cols + cols + 1))]=1 # 1, 2
+  ((c + 2 < cols && r + 2 < rows)) && grid[$((idx + cols + cols + 2))]=1 # 2, 2
+  ((c + 1 < cols && r + 3 < rows)) && grid[$((idx + cols + 3))]=1        # 3, 1
 }
 
 ######## OSCILATORS ###############
+select_oscilator() {
+  # step 1: show options
+  # step 2: read 1 keypress
+  read -r -n 1 shape_key
+  # step 3: case on shape_key
+  case $shape_key in
+  1) blinker grid $cursor_r $cursor_c ;;
+  *) quit_selection ;; # TODO: Implement
+  esac
+}
+
 blinker() {
   local -n g=$1
   local r=$2 c=$3
@@ -263,6 +291,17 @@ blinker() {
   ((r + 2 < rows)) && g[$((idx + cols + cols))]=1
 }
 ######## SPACESHIPS ###############
+select_spaceship() {
+  # step 1: show options
+  # step 2: read 1 keypress
+  read -r -n 1 shape_key
+  # step 3: case on shape_key
+  case $shape_key in
+  1) glider grid $cursor_r $cursor_c ;;
+  *) quit_selection ;; # TODO: Implement
+  esac
+}
+
 glider() {
   local -n g=$1
   local r=$2 c=$3

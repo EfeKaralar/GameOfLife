@@ -17,9 +17,27 @@ Author: Alp Efe Karalar
   - [x] Add pausing capability to add new shapes with the key `p`
   - [x] Add a cursor that can be moved with VIM keys (`hjkl`) when paused
   - [x] Add ability to choose simple shape to insert while paused 
+    - 'i' for pixel 
     - 'b' for basic static shapes 
     - 'o' for oscilating shapes 
     - 's' for spaceships 
   - [ ] Extend shapes and add "number followed by shape insertion" logic 
+    - [ ] Basic (static) shapes
+      - [x] Block
+      - [x] Beehive
+      - [ ] Loaf
+      - [ ] Boat
+      - [ ] Tub
+    - [ ] Oscilators
+      - [x] Blinker
+      - [ ] Toad
+      - [ ] Beacon
+      - [ ] Pulsar
+      - [ ] Penta-decathlon 
+    - [ ] Spaceships
+      - [x] Glider
+      - [ ] LWSS
+      - [ ] MWSS
+      - [ ] HWSS
 - [ ] Adjust display dimensions size dynamically to the terminal size (REACH)
 - [x] Fix flickering 
