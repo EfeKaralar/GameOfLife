@@ -212,8 +212,19 @@ main() {
     l) ((cursor_c < cols - 1)) && ((cursor_c++)) ;;
     k) ((cursor_r > 0)) && ((cursor_r--)) ;;
     j) ((cursor_r < rows - 1)) && ((cursor_r++)) ;;
+    # Insert shapes when paused
+    b)
+      ((paused)) && block grid $cursor_r $cursor_c
+      ;;
+    o)
+      ((paused)) && blinker grid $cursor_r $cursor_c
+      ;;
+    s)
+      ((paused)) && glider grid $cursor_r $cursor_c
+      ;;
     esac
     ((!paused)) && loop
+    # Insert shapes when paused
   done
 }
 

@@ -14,9 +14,9 @@ Author: Alp Efe Karalar
   - [x] Random grid 
   - [x] Set grids (#TODO: Add more)
 - [ ] Ability to add new shapes to the grid 
-  - [x] Add pausing capability to add new shapes 
-  - [ ] Add a cursor that can be moved with VIM keys (`hjkl`) when paused
-  - [ ] Add ability to choose shape to insert while paused 
+  - [x] Add pausing capability to add new shapes with the key `p`
+  - [x] Add a cursor that can be moved with VIM keys (`hjkl`) when paused
+  - [x] Add ability to choose simple shape to insert while paused 
     - 'b' for basic static shapes 
     - 'o' for oscilating shapes 
     - 's' for spaceships 
