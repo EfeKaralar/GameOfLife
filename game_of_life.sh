@@ -357,6 +357,8 @@ select_spaceship() {
   # step 3: case on shape_key
   case $shape_key in
   1) glider grid $cursor_r $cursor_c ;;
+  2) lwss grid $cursor_r $cursor_c ;;
+  3) mwss grid $cursor_r $cursor_c ;;
   *) quit_selection ;; # TODO: Implement
   esac
 }
@@ -371,5 +373,43 @@ glider() {
   set_cell $((r + 2)) $((c + 2))
 }
 
+lwss() {
+  local -n g=$1
+  local r=$2 c=$3
+  # Row 1
+  set_cell $((r)) $((c))
+  set_cell $((r)) $((c + 3))
+  # Row 2
+  set_cell $((r + 1)) $((c + 4))
+  # Row 3
+  set_cell $((r + 2)) $((c))
+  set_cell $((r + 2)) $((c + 4))
+  # Row 4
+  set_cell $((r + 3)) $((c + 1))
+  set_cell $((r + 3)) $((c + 2))
+  set_cell $((r + 3)) $((c + 3))
+  set_cell $((r + 3)) $((c + 4))
+}
+
+mwss() {
+  local -n g=$1
+  local r=$2 c=$3
+  # Row 1
+  set_cell $((r)) $((c + 1))
+  set_cell $((r)) $((c + 2))
+  set_cell $((r)) $((c + 3))
+  set_cell $((r)) $((c + 4))
+  set_cell $((r)) $((c + 5))
+  # Row 2
+  set_cell $((r + 1)) $((c))
+  set_cell $((r + 1)) $((c + 5))
+  # Row 3
+  set_cell $((r + 2)) $((c + 5))
+  # Row 4
+  set_cell $((r + 3)) $((c))
+  set_cell $((r + 3)) $((c + 4))
+  # Row 5
+  set_cell $((r + 4)) $((c + 2))
+}
 ############# MAIN FUNCTION ###########
 main "$@"

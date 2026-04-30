@@ -36,8 +36,18 @@ Author: Alp Efe Karalar
       - [ ] Penta-decathlon 
     - [ ] Spaceships
       - [x] Glider
-      - [ ] LWSS
-      - [ ] MWSS
+      - [x] LWSS
+      - [x] MWSS
       - [ ] HWSS
+    - [ ] Methuselahs
+      - [ ] Print message 
+      - [ ] R-pentomino
+      - [ ] Diehard
+      - [ ] Acorn
+    - [ ] Guns (could be templates instead of shapes)
+      - [ ] Gosper glider gun 
+      - [ ] Simkin glider gun 
+- [ ] Add the ability to save a grid and load it later (Important)
+- [ ] Add the ability to display a shadow of the shape to be placed
 - [ ] Adjust display dimensions size dynamically to the terminal size (REACH)
 - [x] Fix flickering 
