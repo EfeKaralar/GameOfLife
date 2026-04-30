@@ -22,12 +22,12 @@ Author: Alp Efe Karalar
     - 'o' for oscilating shapes 
     - 's' for spaceships 
   - [ ] Extend shapes and add "number followed by shape insertion" logic 
-    - [ ] Basic (static) shapes
+    - [x] Basic (static) shapes
       - [x] Block
       - [x] Beehive
-      - [ ] Loaf
-      - [ ] Boat
-      - [ ] Tub
+      - [x] Loaf
+      - [x] Boat
+      - [x] Tub
     - [ ] Oscilators
       - [x] Blinker
       - [ ] Toad

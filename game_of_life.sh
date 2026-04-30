@@ -243,6 +243,9 @@ select_basic_shape() {
   case $shape_key in
   1) block grid $cursor_r $cursor_c ;;
   2) beehive grid $cursor_r $cursor_c ;;
+  3) loaf grid $cursor_r $cursor_c ;;
+  4) boat grid $cursor_r $cursor_c ;;
+  5) tub grid $cursor_r $cursor_c ;;
   *) quit_selection ;; # TODO: Implement
   esac
 }
@@ -250,7 +253,6 @@ select_basic_shape() {
 block() {
   local -n grid=$1
   local r=$2 c=$3
-  index idx $r $c
   set_cell $r $c
   set_cell $((r + 1)) $c
   set_cell $r $((c + 1))
@@ -261,7 +263,6 @@ block() {
 beehive() {
   local -n grid=$1
   local r=$2 c=$3
-  index idx $r $c
   set_cell $r $((c + 1))
   set_cell $r $((c + 2))
   set_cell $((r + 1)) $((c))
@@ -270,9 +271,42 @@ beehive() {
   set_cell $((r + 2)) $((c + 2))
 }
 
+# Loaf
+loaf() {
+  local -n grid=$1
+  local r=$2 c=$3
+  set_cell $r $((c + 1))
+  set_cell $r $((c + 2))
+  set_cell $((r + 1)) $((c))
+  set_cell $((r + 1)) $((c + 3))
+  set_cell $((r + 2)) $((c + 1))
+  set_cell $((r + 2)) $((c + 3))
+  set_cell $((r + 3)) $((c + 2))
+}
+
+boat() {
+  local -n grid=$1
+  local r=$2 c=$3
+  set_cell $r $c
+  set_cell $((r + 1)) $c
+  set_cell $r $((c + 1))
+  set_cell $((r + 1)) $((c + 2))
+  set_cell $((r + 2)) $((c + 1))
+}
+
+tub() {
+  local -n grid=$1
+  local r=$2 c=$3
+  set_cell $((r + 1)) $c
+  set_cell $r $((c + 1))
+  set_cell $((r + 1)) $((c + 2))
+  set_cell $((r + 2)) $((c + 1))
+}
+
 ######## OSCILATORS ###############
 select_oscilator() {
   # step 1: show options
+  # TODO: implement
   # step 2: read 1 keypress
   read -r -n 1 shape_key
   # step 3: case on shape_key
@@ -285,7 +319,6 @@ select_oscilator() {
 blinker() {
   local -n g=$1
   local r=$2 c=$3
-  index idx $r $c
   set_cell $r $c
   set_cell $r $((c + 1))
   set_cell $r $((c + 2))
@@ -305,7 +338,6 @@ select_spaceship() {
 glider() {
   local -n g=$1
   local r=$2 c=$3
-  index idx $r $c
   set_cell $((r)) $((c + 1))
   set_cell $((r + 1)) $((c + 2))
   set_cell $((r + 2)) $((c))
