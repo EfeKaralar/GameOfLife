@@ -314,6 +314,7 @@ select_oscilator() {
   1) blinker grid $cursor_r $cursor_c ;;
   2) toad grid $cursor_r $cursor_c ;;
   3) beacon grid $cursor_r $cursor_c ;;
+  5) penta_decathlon grid $cursor_r $cursor_c ;;
   *) quit_selection ;; # TODO: Implement
   esac
 }
@@ -348,6 +349,43 @@ beacon() {
   set_cell $((r + 3)) $((c + 3))
   set_cell $((r + 2)) $((c + 3))
   set_cell $((r + 3)) $((c + 2))
+}
+penta_decathlon() {
+  local -n g=$1
+  local r=$2 c=$3
+  # Top shape
+  # Row 1 (Starts at (3, 4)
+  set_cell $((r + 3)) $((c + 4))
+  set_cell $((r + 3)) $((c + 5))
+  set_cell $((r + 3)) $((c + 6))
+  # Row 2 and 3
+  set_cell $((r + 4)) $((c + 5))
+  set_cell $((r + 5)) $((c + 5))
+  # Row 4 (Starts at (4, 6))
+  set_cell $((r + 6)) $((c + 4))
+  set_cell $((r + 6)) $((c + 5))
+  set_cell $((r + 6)) $((c + 6))
+
+  # Middle shape (Starts at (4, 8))
+  set_cell $((r + 8)) $((c + 4))
+  set_cell $((r + 8)) $((c + 5))
+  set_cell $((r + 8)) $((c + 6))
+  set_cell $((r + 9)) $((c + 4))
+  set_cell $((r + 9)) $((c + 5))
+  set_cell $((r + 9)) $((c + 6))
+
+  # Bottom shape
+  # Row 1 (Starts at (4, 10))
+  set_cell $((r + 11)) $((c + 4))
+  set_cell $((r + 11)) $((c + 5))
+  set_cell $((r + 11)) $((c + 6))
+  # Row 2 and 3
+  set_cell $((r + 12)) $((c + 5))
+  set_cell $((r + 13)) $((c + 5))
+  # Row 4 (Starts at (4, 13))
+  set_cell $((r + 14)) $((c + 4))
+  set_cell $((r + 14)) $((c + 5))
+  set_cell $((r + 14)) $((c + 6))
 }
 ######## SPACESHIPS ###############
 select_spaceship() {

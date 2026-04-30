@@ -33,7 +33,7 @@ Author: Alp Efe Karalar
       - [x] Toad
       - [x] Beacon
       - [ ] Pulsar
-      - [ ] Penta-decathlon 
+      - [x] Penta-decathlon 
     - [x] Spaceships
       - [x] Glider
       - [x] LWSS
