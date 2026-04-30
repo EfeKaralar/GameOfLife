@@ -34,11 +34,11 @@ Author: Alp Efe Karalar
       - [x] Beacon
       - [ ] Pulsar
       - [ ] Penta-decathlon 
-    - [ ] Spaceships
+    - [x] Spaceships
       - [x] Glider
       - [x] LWSS
       - [x] MWSS
-      - [ ] HWSS
+      - [x] HWSS
     - [ ] Methuselahs
       - [ ] Print message 
       - [ ] R-pentomino

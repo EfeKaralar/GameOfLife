@@ -359,6 +359,7 @@ select_spaceship() {
   1) glider grid $cursor_r $cursor_c ;;
   2) lwss grid $cursor_r $cursor_c ;;
   3) mwss grid $cursor_r $cursor_c ;;
+  4) hwss grid $cursor_r $cursor_c ;;
   *) quit_selection ;; # TODO: Implement
   esac
 }
@@ -410,6 +411,29 @@ mwss() {
   set_cell $((r + 3)) $((c + 4))
   # Row 5
   set_cell $((r + 4)) $((c + 2))
+}
+
+hwss() {
+  local -n g=$1
+  local r=$2 c=$3
+  # Row 1
+  set_cell $((r)) $((c + 1))
+  set_cell $((r)) $((c + 2))
+  set_cell $((r)) $((c + 3))
+  set_cell $((r)) $((c + 4))
+  set_cell $((r)) $((c + 5))
+  set_cell $((r)) $((c + 6))
+  # Row 2
+  set_cell $((r + 1)) $((c))
+  set_cell $((r + 1)) $((c + 6))
+  # Row 3
+  set_cell $((r + 2)) $((c + 6))
+  # Row 4
+  set_cell $((r + 3)) $((c))
+  set_cell $((r + 3)) $((c + 5))
+  # Row 5
+  set_cell $((r + 4)) $((c + 2))
+  set_cell $((r + 4)) $((c + 3))
 }
 ############# MAIN FUNCTION ###########
 main "$@"
