@@ -30,8 +30,8 @@ Author: Alp Efe Karalar
       - [x] Tub
     - [ ] Oscilators
       - [x] Blinker
-      - [ ] Toad
-      - [ ] Beacon
+      - [x] Toad
+      - [x] Beacon
       - [ ] Pulsar
       - [ ] Penta-decathlon 
     - [ ] Spaceships

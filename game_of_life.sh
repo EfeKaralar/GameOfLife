@@ -312,6 +312,8 @@ select_oscilator() {
   # step 3: case on shape_key
   case $shape_key in
   1) blinker grid $cursor_r $cursor_c ;;
+  2) toad grid $cursor_r $cursor_c ;;
+  3) beacon grid $cursor_r $cursor_c ;;
   *) quit_selection ;; # TODO: Implement
   esac
 }
@@ -322,6 +324,30 @@ blinker() {
   set_cell $r $c
   set_cell $r $((c + 1))
   set_cell $r $((c + 2))
+}
+
+toad() {
+  local -n g=$1
+  local r=$2 c=$3
+  set_cell $((r)) $((c + 1))
+  set_cell $((r)) $((c + 2))
+  set_cell $((r)) $((c + 3))
+  set_cell $((r + 1)) $((c))
+  set_cell $((r + 1)) $((c + 1))
+  set_cell $((r + 1)) $((c + 2))
+}
+
+beacon() {
+  local -n g=$1
+  local r=$2 c=$3
+  # Top left
+  set_cell $((r)) $((c))
+  set_cell $((r)) $((c + 1))
+  set_cell $((r + 1)) $((c))
+  # Top right
+  set_cell $((r + 3)) $((c + 3))
+  set_cell $((r + 2)) $((c + 3))
+  set_cell $((r + 3)) $((c + 2))
 }
 ######## SPACESHIPS ###############
 select_spaceship() {
