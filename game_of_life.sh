@@ -314,6 +314,7 @@ select_oscilator() {
   1) blinker grid $cursor_r $cursor_c ;;
   2) toad grid $cursor_r $cursor_c ;;
   3) beacon grid $cursor_r $cursor_c ;;
+  4) pulsar grid $cursor_r $cursor_c ;;
   5) penta_decathlon grid $cursor_r $cursor_c ;;
   *) quit_selection ;; # TODO: Implement
   esac
@@ -350,18 +351,95 @@ beacon() {
   set_cell $((r + 2)) $((c + 3))
   set_cell $((r + 3)) $((c + 2))
 }
+
+pulsar() {
+  local -n g=$1
+  local r=$2 c=$3
+  # Top left shape
+  ## Top start 2, 4
+  set_cell $((r + 2)) $((c + 4))
+  set_cell $((r + 2)) $((c + 5))
+  set_cell $((r + 2)) $((c + 6))
+  ## Left start  4, 2
+  set_cell $((r + 4)) $((c + 2))
+  set_cell $((r + 5)) $((c + 2))
+  set_cell $((r + 6)) $((c + 2))
+  ## Right start  4, 7
+  set_cell $((r + 4)) $((c + 7))
+  set_cell $((r + 5)) $((c + 7))
+  set_cell $((r + 6)) $((c + 7))
+  ## Bot start 7, 4
+  set_cell $((r + 7)) $((c + 4))
+  set_cell $((r + 7)) $((c + 5))
+  set_cell $((r + 7)) $((c + 6))
+
+  # Top right shape
+  ## Top start 2, 10
+  set_cell $((r + 2)) $((c + 10))
+  set_cell $((r + 2)) $((c + 11))
+  set_cell $((r + 2)) $((c + 12))
+  ## Left start  4, 9
+  set_cell $((r + 4)) $((c + 9))
+  set_cell $((r + 5)) $((c + 9))
+  set_cell $((r + 6)) $((c + 9))
+  ## Right start  4, 14
+  set_cell $((r + 4)) $((c + 14))
+  set_cell $((r + 5)) $((c + 14))
+  set_cell $((r + 6)) $((c + 14))
+  ## Bot start 7, 10
+  set_cell $((r + 7)) $((c + 10))
+  set_cell $((r + 7)) $((c + 11))
+  set_cell $((r + 7)) $((c + 12))
+
+  # Bot left shape
+  ## Top start 9, 4
+  set_cell $((r + 9)) $((c + 4))
+  set_cell $((r + 9)) $((c + 5))
+  set_cell $((r + 9)) $((c + 6))
+  ## Left start  10, 2
+  set_cell $((r + 10)) $((c + 2))
+  set_cell $((r + 11)) $((c + 2))
+  set_cell $((r + 12)) $((c + 2))
+  ## Right start  10, 7
+  set_cell $((r + 10)) $((c + 7))
+  set_cell $((r + 11)) $((c + 7))
+  set_cell $((r + 12)) $((c + 7))
+  ## Bot start 14, 4
+  set_cell $((r + 14)) $((c + 4))
+  set_cell $((r + 14)) $((c + 5))
+  set_cell $((r + 14)) $((c + 6))
+
+  # Bot Right Shape
+  ## Top start  9, 10
+  set_cell $((r + 9)) $((c + 10))
+  set_cell $((r + 9)) $((c + 11))
+  set_cell $((r + 9)) $((c + 12))
+  ## Left Start  10, 9
+  set_cell $((r + 10)) $((c + 9))
+  set_cell $((r + 11)) $((c + 9))
+  set_cell $((r + 12)) $((c + 9))
+  ## Right start  10, 14
+  set_cell $((r + 10)) $((c + 14))
+  set_cell $((r + 11)) $((c + 14))
+  set_cell $((r + 12)) $((c + 14))
+  ## Bot start 14, 10
+  set_cell $((r + 14)) $((c + 10))
+  set_cell $((r + 14)) $((c + 11))
+  set_cell $((r + 14)) $((c + 12))
+}
+
 penta_decathlon() {
   local -n g=$1
   local r=$2 c=$3
   # Top shape
-  # Row 1 (Starts at (3, 4)
+  ## Row 1 (Starts at (3, 4)
   set_cell $((r + 3)) $((c + 4))
   set_cell $((r + 3)) $((c + 5))
   set_cell $((r + 3)) $((c + 6))
-  # Row 2 and 3
+  ## Row 2 and 3
   set_cell $((r + 4)) $((c + 5))
   set_cell $((r + 5)) $((c + 5))
-  # Row 4 (Starts at (4, 6))
+  ## Row 4 (Starts at (4, 6))
   set_cell $((r + 6)) $((c + 4))
   set_cell $((r + 6)) $((c + 5))
   set_cell $((r + 6)) $((c + 6))
@@ -375,14 +453,14 @@ penta_decathlon() {
   set_cell $((r + 9)) $((c + 6))
 
   # Bottom shape
-  # Row 1 (Starts at (4, 10))
+  ## Row 1 (Starts at (4, 10))
   set_cell $((r + 11)) $((c + 4))
   set_cell $((r + 11)) $((c + 5))
   set_cell $((r + 11)) $((c + 6))
-  # Row 2 and 3
+  ## Row 2 and 3
   set_cell $((r + 12)) $((c + 5))
   set_cell $((r + 13)) $((c + 5))
-  # Row 4 (Starts at (4, 13))
+  ## Row 4 (Starts at (4, 13))
   set_cell $((r + 14)) $((c + 4))
   set_cell $((r + 14)) $((c + 5))
   set_cell $((r + 14)) $((c + 6))

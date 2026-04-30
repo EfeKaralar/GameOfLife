@@ -28,11 +28,11 @@ Author: Alp Efe Karalar
       - [x] Loaf
       - [x] Boat
       - [x] Tub
-    - [ ] Oscilators
+    - [x] Oscilators
       - [x] Blinker
       - [x] Toad
       - [x] Beacon
-      - [ ] Pulsar
+      - [x] Pulsar
       - [x] Penta-decathlon 
     - [x] Spaceships
       - [x] Glider
