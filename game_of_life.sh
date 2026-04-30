@@ -75,7 +75,7 @@ set_cell() {
   local r=$1
   local c=$2
   index idx $r $c
-  grid[$idx]=1
+  ((r >= 0 && r < rows && c >= 0 && c < cols)) && grid[$idx]=1
 }
 
 setup_grid() {
@@ -251,10 +251,10 @@ block() {
   local -n grid=$1
   local r=$2 c=$3
   index idx $r $c
-  grid[$idx]=1
-  ((c + 1 < cols)) && grid[$((idx + 1))]=1
-  ((r + 1 < rows)) && grid[$((idx + cols))]=1
-  ((c + 1 < cols && r + 1 < rows)) && grid[$((idx + cols + 1))]=1
+  set_cell $r $c
+  set_cell $((r + 1)) $c
+  set_cell $r $((c + 1))
+  set_cell $((r + 1)) $((c + 1))
 }
 
 # Beehive
@@ -262,12 +262,12 @@ beehive() {
   local -n grid=$1
   local r=$2 c=$3
   index idx $r $c
-  ((c + 1 < cols)) && grid[$((idx + 1))]=1                               # 0, 1
-  ((c + 2 < cols)) && grid[$((idx + 2))]=1                               # 0, 2
-  ((r + 1 < rows)) && grid[$((idx + cols))]=1                            # 1, 0
-  ((c + 1 < cols && r + 2 < rows)) && grid[$((idx + cols + cols + 1))]=1 # 1, 2
-  ((c + 2 < cols && r + 2 < rows)) && grid[$((idx + cols + cols + 2))]=1 # 2, 2
-  ((c + 1 < cols && r + 3 < rows)) && grid[$((idx + cols + 3))]=1        # 3, 1
+  set_cell $r $((c + 1))
+  set_cell $r $((c + 2))
+  set_cell $((r + 1)) $((c))
+  set_cell $((r + 1)) $((c + 3))
+  set_cell $((r + 2)) $((c + 1))
+  set_cell $((r + 2)) $((c + 2))
 }
 
 ######## OSCILATORS ###############
@@ -286,9 +286,9 @@ blinker() {
   local -n g=$1
   local r=$2 c=$3
   index idx $r $c
-  g[$idx]=1
-  ((r + 1 < rows)) && g[$((idx + cols))]=1
-  ((r + 2 < rows)) && g[$((idx + cols + cols))]=1
+  set_cell $r $c
+  set_cell $r $((c + 1))
+  set_cell $r $((c + 2))
 }
 ######## SPACESHIPS ###############
 select_spaceship() {
@@ -306,12 +306,11 @@ glider() {
   local -n g=$1
   local r=$2 c=$3
   index idx $r $c
-  g[$((idx + 1))]=1
-  ((r + 1 < rows && c + 2 < cols)) && g[$idx + cols + 2]=1
-  ((r + 2 < rows)) && g[$idx + cols + cols]=1
-  ((r + 2 < rows && c + 1 < cols)) && g[$idx + cols + cols + 1]=1
-  ((r + 2 < rows && c + 2 < cols)) && g[$idx + cols + cols + 2]=1
-
+  set_cell $((r)) $((c + 1))
+  set_cell $((r + 1)) $((c + 2))
+  set_cell $((r + 2)) $((c))
+  set_cell $((r + 2)) $((c + 1))
+  set_cell $((r + 2)) $((c + 2))
 }
 
 ############# MAIN FUNCTION ###########
