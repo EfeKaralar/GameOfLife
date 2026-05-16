@@ -3,7 +3,7 @@
 ############ SET UP ######################
 # Right now, setting the terminal dimensions manually will be easier for us
 rows=24
-cols=96
+cols=95
 
 paused=1 # 0: false - 1: true
 grid=($(printf '0%.0s ' $(seq 1 $((rows * cols)))))
@@ -137,7 +137,8 @@ setup_grid() {
 # display grid function
 # TODO:
 # [x] Fix Flicker
-# [ ] Add dynamic scaling (reach goal)
+# [x] Add borders to indicate the fixed size of terminal
+# (ABANDONED) Add dynamic scaling (reach goal)
 display() {
   local frame=''
   frame+='\e[H' # cursor to home
@@ -151,11 +152,18 @@ display() {
         [[ $cell -eq 1 ]] && frame+='#' || frame+=' '
       fi
     done
-    frame+='\n'
+    frame+='|\n' # '|' is used for vertical border
   done
   printf "$frame"
-  printf '\e[%d;0H' $((rows)) # move cursor to the footer row
+  print_bottom_border
   display_footer
+
+}
+
+print_bottom_border() {
+  # print the bottom border
+  printf '─%.0s' $(seq 1 $cols)
+  printf '─\n'
 }
 
 display_footer() {

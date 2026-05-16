@@ -13,7 +13,7 @@ Author: Alp Efe Karalar
   - [x] Empty grid 
   - [x] Random grid 
   - [x] Set grids (#TODO: Add more)
-- [ ] Ability to add new shapes to the grid 
+- [x] Ability to add new shapes to the grid 
   - [x] Add pausing capability to add new shapes with the key `p`
   - [x] Add a cursor that can be moved with VIM keys (`hjkl`) when paused
   - [x] Add ability to choose simple shape to insert while paused 
@@ -48,6 +48,7 @@ Author: Alp Efe Karalar
       - [ ] Gosper glider gun 
       - [ ] Simkin glider gun 
 - [ ] Add the ability to save a grid and load it later (Important)
-- [ ] Add the ability to display a shadow of the shape to be placed
-- [ ] Adjust display dimensions size dynamically to the terminal size (REACH)
+- [x] Add borders to indicate the fixed size of the space
 - [x] Fix flickering 
+- [ ] Adjust display dimensions size dynamically to the terminal size (REACH)
+- [ ] Add the ability to display a shadow of the shape to be placed (REACH)
