@@ -47,8 +47,9 @@ Author: Alp Efe Karalar
     - [ ] Guns (could be templates instead of shapes)
       - [ ] Gosper glider gun 
       - [ ] Simkin glider gun 
-- [ ] Add the ability to save a grid and load it later (Important)
+- [x] Add the ability to save a grid and load it later (Important)
 - [x] Add borders to indicate the fixed size of the space
 - [x] Fix flickering 
+- [x] Fix printed messages
 - [ ] Adjust display dimensions size dynamically to the terminal size (REACH)
 - [ ] Add the ability to display a shadow of the shape to be placed (REACH)

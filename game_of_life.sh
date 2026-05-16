@@ -2,7 +2,7 @@
 
 ############ SET UP ######################
 # Right now, setting the terminal dimensions manually will be easier for us
-rows=24
+rows=20
 cols=95
 
 paused=1 # 0: false - 1: true
@@ -11,6 +11,8 @@ mode="empty"
 preset_num=1
 cursor_c=0
 cursor_r=0
+
+footer_msg=""
 
 ############ HELPER FUNCTIONS #############
 parse_flags() {
@@ -23,10 +25,12 @@ parse_flags() {
     -e)
       mode="empty"
       setup_grid $mode
+      footer_msg="Empty grid"
       ;;
     -r)
       mode="random"
       setup_grid $mode
+      footer_msg="Grid randomly initialized"
       ;;
 
     -l)
@@ -34,7 +38,16 @@ parse_flags() {
       preset_num=$2
       shift
       setup_grid $mode $preset_num
+      footer_msg="Loaded preset $p"
       ;;
+    -f)
+      mode="file"
+      filename=$2
+      shift
+      setup_grid $mode $filename
+      footer_msg="Loaded file $p"
+      ;;
+
     *)
       show_help
       exit 1
@@ -54,6 +67,7 @@ Usage: ./game_of_life [flag]
               1: Block + Blinker + Glider
               2: To be implemented... 
               3: To be implemented  
+  -f [file] Load the grid layout saved in [file]. [file] must be txt file
 EOF
 }
 
@@ -130,6 +144,18 @@ setup_grid() {
       ;;
     esac
     ;;
+  file)
+    # Load the file if file exists, otherwise error
+    # WARNING: No validity checking for file! Only input valid files!
+    if [[ -f $p ]]; then
+      grid=($(cat $p))
+
+    else
+      printf "Please enter a valid file name"
+      exit 1
+    fi
+    ;;
+
   esac
 
 }
@@ -141,7 +167,8 @@ setup_grid() {
 # (ABANDONED) Add dynamic scaling (reach goal)
 display() {
   local frame=''
-  frame+='\e[H' # cursor to home
+  frame+='\e[H\e[J' # home, then erase from cursor to end of screen
+  # frame+='\e[H'     # cursor to home
   for ((r = 0; r < $rows; r++)); do
     for ((c = 0; c < $cols; c++)); do
       index idx $r $c
@@ -154,7 +181,7 @@ display() {
     done
     frame+='|\n' # '|' is used for vertical border
   done
-  printf "$frame"
+  printf '%b' "$frame"
   print_bottom_border
   display_footer
 
@@ -167,9 +194,13 @@ print_bottom_border() {
 }
 
 display_footer() {
-  printf "Pause to insert shapes\n"
-  printf "p: pause/unpause | hjkl: move cursor | i: pixel | b: basic | o: oscilator | s: spaceship\n"
-  printf "Cursor location:'%d' '%d' " $cursor_c $cursor_r
+  if ((paused)); then
+    printf "PAUSED | p: unpause | hjkl: move cursor | i: pixel | b: basic | o: oscillator | s: spaceship | w: save\n"
+  else
+    printf "RUNNING | p: pause\n"
+  fi
+  printf "%s\n" "$footer_msg"
+  printf "Cursor: (%d, %d)" $cursor_r $cursor_c
 }
 
 count_neighbors() {
@@ -209,6 +240,15 @@ loop() {
   # sleep 0.2
 }
 
+save_grid() {
+  local i=1
+  while [[ -f "grid${i}.txt" ]]; do
+    ((i++))
+  done
+  echo "${grid[@]}" >"grid${i}.txt"
+  footer_msg="Saved to grid${i}.txt"
+}
+
 main() {
   parse_flags "$@"
   while true; do
@@ -236,6 +276,9 @@ main() {
     s)
       ((paused)) && select_spaceship
       ;;
+    w)
+      ((paused)) && save_grid
+      ;;
     esac
     ((!paused)) && loop
   done
@@ -245,16 +288,34 @@ main() {
 ######## STATIC SHAPES ############
 select_basic_shape() {
   # step 1: show options
+  footer_msg="BASIC: 1: block | 2: beehive | 3: loaf | 4: boat | 5: tub"
+  display # redraw so the message appears before waiting for input
+
   # step 2: read 1 keypress
   read -r -n 1 shape_key
   # step 3: case on shape_key
   case $shape_key in
-  1) block grid $cursor_r $cursor_c ;;
-  2) beehive grid $cursor_r $cursor_c ;;
-  3) loaf grid $cursor_r $cursor_c ;;
-  4) boat grid $cursor_r $cursor_c ;;
-  5) tub grid $cursor_r $cursor_c ;;
-  *) quit_selection ;; # TODO: Implement
+  1)
+    block grid $cursor_r $cursor_c
+    footer_msg="Placed: block"
+    ;;
+  2)
+    beehive grid $cursor_r $cursor_c
+    footer_msg="Placed: beehive"
+    ;;
+  3)
+    loaf grid $cursor_r $cursor_c
+    footer_msg="Placed: loaf"
+    ;;
+  4)
+    boat grid $cursor_r $cursor_c
+    footer_msg="Placed: boat"
+    ;;
+  5)
+    tub grid $cursor_r $cursor_c
+    footer_msg="Placed: tub"
+    ;;
+  *) footer_msg="Cancelled" ;;
   esac
 }
 # Block
@@ -314,17 +375,34 @@ tub() {
 ######## OSCILATORS ###############
 select_oscilator() {
   # step 1: show options
-  # TODO: implement
+  footer_msg="OSCILLATORS: 1: blinker | 2: toad | 3: beacon | 4: pulsar | 5: penta-decathlon"
+  display
   # step 2: read 1 keypress
   read -r -n 1 shape_key
   # step 3: case on shape_key
   case $shape_key in
-  1) blinker grid $cursor_r $cursor_c ;;
-  2) toad grid $cursor_r $cursor_c ;;
-  3) beacon grid $cursor_r $cursor_c ;;
-  4) pulsar grid $cursor_r $cursor_c ;;
-  5) penta_decathlon grid $cursor_r $cursor_c ;;
-  *) quit_selection ;; # TODO: Implement
+  1)
+    blinker grid $cursor_r $cursor_c
+    footer_msg="Placed: blinker"
+    ;;
+  2)
+    toad grid $cursor_r $cursor_c
+    footer_msg="Placed: toad"
+    ;;
+  3)
+    beacon grid $cursor_r $cursor_c
+    footer_msg="Placed: beacon"
+    ;;
+  4)
+    pulsar grid $cursor_r $cursor_c
+    footer_msg="Placed: pulsar"
+    ;;
+  5)
+    penta_decathlon grid $cursor_r $cursor_c
+    footer_msg="Placed: penta-decathlon"
+    ;;
+  *) footer_msg="Cancelled" ;;
+
   esac
 }
 
@@ -476,15 +554,30 @@ penta_decathlon() {
 ######## SPACESHIPS ###############
 select_spaceship() {
   # step 1: show options
+  footer_msg="SPACESHIPS: 1: glider | 2: lwss | 3: mwss | 4: hwss"
+  display
+
   # step 2: read 1 keypress
   read -r -n 1 shape_key
   # step 3: case on shape_key
   case $shape_key in
-  1) glider grid $cursor_r $cursor_c ;;
-  2) lwss grid $cursor_r $cursor_c ;;
-  3) mwss grid $cursor_r $cursor_c ;;
-  4) hwss grid $cursor_r $cursor_c ;;
-  *) quit_selection ;; # TODO: Implement
+  1)
+    glider grid $cursor_r $cursor_c
+    footer_msg="Placed: glider"
+    ;;
+  2)
+    lwss grid $cursor_r $cursor_c
+    footer_msg="Placed: lwss"
+    ;;
+  3)
+    mwss grid $cursor_r $cursor_c
+    footer_msg="Placed: mwss"
+    ;;
+  4)
+    hwss grid $cursor_r $cursor_c
+    footer_msg="Placed: hwss"
+    ;;
+  *) footer_msg="Cancelled" ;;
   esac
 }
 
