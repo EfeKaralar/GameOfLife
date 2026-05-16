@@ -1,17 +1,21 @@
 #!/usr/bin/env bash
 
 ############ SET UP ######################
-# Right now, setting the terminal dimensions manually will be easier for us
+# Right now, only works with fixed dimensions
 rows=20
 cols=95
 
 paused=1 # 0: false - 1: true
+# initialize grid
 grid=($(printf '0%.0s ' $(seq 1 $((rows * cols)))))
 mode="empty"
 preset_num=1
+
+# init cursor location
 cursor_c=0
 cursor_r=0
 
+# init footer message
 footer_msg=""
 
 ############ HELPER FUNCTIONS #############
@@ -23,17 +27,20 @@ parse_flags() {
       exit 0
       ;;
     -e)
+      # empty grid
       mode="empty"
       setup_grid $mode
       footer_msg="Empty grid"
       ;;
     -r)
+      # randomly set up grid
       mode="random"
       setup_grid $mode
       footer_msg="Grid randomly initialized"
       ;;
 
     -l)
+      # loading presets froom number
       mode="preset"
       preset_num=$2
       shift
@@ -41,6 +48,7 @@ parse_flags() {
       footer_msg="Loaded preset $p"
       ;;
     -f)
+      # loading grid from file
       mode="file"
       filename=$2
       shift
@@ -68,6 +76,7 @@ Usage: ./game_of_life [flag]
               2: To be implemented... 
               3: To be implemented  
   -f [file] Load the grid layout saved in [file]. [file] must be txt file
+            WARNING: Only load files that were outputted from this program
 EOF
 }
 
@@ -194,6 +203,7 @@ print_bottom_border() {
 }
 
 display_footer() {
+  # display the status, controls, message, and cursor location
   if ((paused)); then
     printf "PAUSED | p: unpause | hjkl: move cursor | i: pixel | b: basic | o: oscillator | s: spaceship | w: save\n"
   else
@@ -204,8 +214,10 @@ display_footer() {
 }
 
 count_neighbors() {
+  # Main logic for determining status of cells
   local -n result=$1 # nameref
   local r=$2 c=$3
+  # traverse neighbors and increment $result if a neighbor is 1
   for ((i = -1; i < 2; i++)); do
     for ((j = -1; j < 2; j++)); do
       # Skip the selected cell
@@ -222,6 +234,7 @@ count_neighbors() {
 }
 
 loop() {
+  # Main loop for game of life logic
   declare -a next=("${grid[@]}")
   for ((r = 0; r < rows; r++)); do
     for ((c = 0; c < cols; c++)); do
@@ -237,10 +250,11 @@ loop() {
     done
   done
   grid=("${next[@]}")
-  # sleep 0.2
+  # sleep 0.2 # Uncomment this line if running too fast
 }
 
 save_grid() {
+  # Save the grid as grid[i].txt where i automatically increments
   local i=1
   while [[ -f "grid${i}.txt" ]]; do
     ((i++))
@@ -257,26 +271,33 @@ main() {
     # printf "KEY: '%s' PAUSED: %d\n" "$key" "$paused" # temporary debug line
     case $key in
     p)
+      # pause / unpause
       paused=$((!paused))
       ;;
+    # movement keys (VIM keys)
     h) ((cursor_c > 0)) && ((cursor_c--)) ;;
     l) ((cursor_c < cols - 1)) && ((cursor_c++)) ;;
     k) ((cursor_r > 0)) && ((cursor_r--)) ;;
     j) ((cursor_r < rows - 1)) && ((cursor_r++)) ;;
     # Insert shapes when paused
     i)
+      # insert 1 pixel
       ((paused)) && set_cell cursor_r cursor_c
       ;;
     b)
+      # insert a static basic shape
       ((paused)) && select_basic_shape
       ;;
     o)
+      # insert an oscilator
       ((paused)) && select_oscilator
       ;;
     s)
+      # insert a spaceship
       ((paused)) && select_spaceship
       ;;
     w)
+      # save the grid as grid[i].txt
       ((paused)) && save_grid
       ;;
     esac
